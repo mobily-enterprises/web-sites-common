@@ -5,15 +5,20 @@ function displayAtTop(s) {
   return !s.match('/')
 }
 
-function prettySource(s) {
+function prettySource(s, deleteIndex) {
   if (s === 'index.md') s = 'home.md'
-  if (s.endsWith('.md')) s = s.replace(/\.md$/g, '').replace(/\-/g, ' ')
+  s = s.replace(/\.md$/g, '').replace(/\-/g, ' ')
 
+  // /something becomes something
   if (s.match('/')) {
     s = s.split('/')[1]
   }
 
-  return s
+  // Don't show "index" since it would be pointless
+  s = s.trim()
+  if (s.endsWith('index')) s = s.substring(0, s.length-14)
+
+  return s.split(".")[0]
 }
 
 function tocClasses(s, source) {
@@ -29,8 +34,9 @@ function tocClasses(s, source) {
   <title><%= title %></title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <link rel="stylesheet" media="all" href="/public/stylesheets/normalize.css" />
   <link rel="stylesheet" media="all" href="<%= css %>" />
+  <link rel="stylesheet" media="all" href="normalize.css" />
+  <link rel="stylesheet" media="all" href="extra.css" />
 
   <script type="module" src="/lib/material-esm.js"></script>
   <script type="module" src="/lib/tpe-esm.js"></script>
@@ -100,21 +106,23 @@ function tocClasses(s, source) {
     </div>
   </ee-header>
   <main role="main">
-    <% if (source === 'code.md' || source.startsWith('code/') ) { %>
+    <% //if (source === 'code.md' || source.startsWith('code/') ) { %>
+    <% // if (source.match('/')) { %>
+
       <nav class="toc" role="navigation">
         <ul>
           <% for (var i=0, l = sources.length; i < l; i++) { %>
             <% var s = sources[i]; %>
-            <% if (!s.startsWith('code/')) continue %>
+            <% // if (!s.startsWith(source.split('.')[0] + '/')) continue %>
               <li>
                 <a class="source <%= tocClasses(s, source) %>" href="<%= relativeToThisFile(finalPath(s)) %>">
-                    <%- s.split('/').join(' &#8627; ') %>
+                    <%- prettySource(s.split('/').join(' &#8627; ')) %>
                 </a>
               </li>
           <% } %>
         </ul>
       </nav>
-    <% } %>
+    <% // } %>
 
     <section class="content-page">
 

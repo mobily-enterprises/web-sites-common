@@ -1,4 +1,7 @@
 rm -rf ../docs/*;
+
+cp ../node_modules/web-sites-common/normalize.css ../docs
+
 # SHOULD CHANGE
 cp CNAME ../docs/CNAME
 
