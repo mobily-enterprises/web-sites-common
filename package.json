@@ -1,6 +1,6 @@
 {
   "name": "web-sites-common",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Common properties for JS-KIT related web sites",
   "type": "commonjs",
   "scripts": {
