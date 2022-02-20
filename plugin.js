@@ -1,4 +1,7 @@
 const fs = require('fs')
+const path = require('path')
+
+const pkgJson = require(path.resolve(path.join(process.cwd(), '..', 'package.json')))
 
 exports.beforeMarked = async function (s) {
   let result
@@ -16,6 +19,7 @@ exports.beforeMarked = async function (s) {
   result = result.replace(/^<<IMG\[([^\]]*)\]/mg, (m, p1) => {
     return `<img src="${p1}"></img>`
   })
+
   return result
 }
 
@@ -33,5 +37,15 @@ exports.afterHtml = async function (s) {
     }
   })
 
+  return result
+}
+
+exports.finalPass = async function (...args) {
+  const s = args[0]
+
+  // console.log(`---------------\n${s}\n--------------------\n\n\n`)
+  const result = s.replace(/<<REPO_URL>>/, (m, p1) => {
+    return pkgJson.repository.url
+  })
   return result
 }
